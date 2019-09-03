@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import axios from "axios";
 import StoreFront from "./Components/StoreFront/StoreFront";
 import ShoppingCart from "./Components/ShoppingCart/ShoppingCart";
 import NavBar from "./Components/NavBar/NavBar";
+import axios from "axios";
 
 class App extends Component {
   constructor(props) {
@@ -12,6 +12,9 @@ class App extends Component {
       cart: [],
       showCart: false
     };
+    this.addToCart = this.addToCart.bind(this)
+    this.removeFromCart = this.removeFromCart.bind(this)
+    this.navigate = this.navigate.bind(this)
   }
   componentDidMount() {
     axios
@@ -26,6 +29,8 @@ class App extends Component {
     this.setState({
       cart: [...this.state.cart, item]
     });
+    console.log('added to cart')
+    console.log(this.state.cart)
   }
   removeFromCart(index) {
     let cartCopy = this.state.cart.slice();
@@ -33,29 +38,34 @@ class App extends Component {
     this.setState({
       cart: cartCopy
     });
+    console.log('pigs flying')
   }
   navigate(location) {
     if (location === "cart") {
-      this.state.showCart = true;
+      this.setState({
+        showCart: true
+      })
     } else {
-      this.state.showCart = false;
+      this.setState({
+        showCart: false
+      })
     }
   }
-  render() {
-    const { products, cart, showCart } = this.state;
-    return (
-      <div className="App">
-        <NavBar navigate={this.navigate} />
-        <div className="main-container">
-          {showCart ? (
-            <ShoppingCart cart={cart} removeFromCart={this.removeFromCart} />
-          ) : (
-            <StoreFront products={products} addToCart={this.addToCart} />
-          )}
+    render() {
+      const { products, cart, showCart } = this.state;
+      return (
+        <div className="App">
+          <NavBar navigate={this.navigate} />
+          <div className="main-container">
+            {showCart ? (
+              <ShoppingCart cart={cart} removeFromCart={this.removeFromCart} />
+            ) : (
+                <StoreFront products={products} addToCart={this.addToCart} />
+              )}
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
-}
 
-export default App;
+  export default App;
